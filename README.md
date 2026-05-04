@@ -110,7 +110,7 @@ automotive_project/
 
 ```bash
 # 1. Clone or download the project
-cd interview/
+cd automotive_project/
 
 # 2. Install dependencies
 pip install pandas openpyxl xgboost shap scikit-learn
