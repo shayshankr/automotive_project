@@ -148,7 +148,7 @@ python solution_code/queries.py --query Q9   # geographic breakdown
 
 ### Regenerate the BRD
 ```bash
-cd interview/
+cd automotive_project/
 npm install docx                              # one-time
 node solution_code/create_brd.js              # produces BRD_and_TestCases.docx
 ```
@@ -309,4 +309,4 @@ No cloud dependencies. Runs offline on a laptop in under 30 seconds.
 
 ## License
 
-This project was created as an interview deliverable. All sample data is synthetic and contains no real customer information.
+This project was created as an automotive project deliverable. All sample data is synthetic and contains no real customer information.
