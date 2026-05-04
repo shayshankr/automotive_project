@@ -304,8 +304,7 @@ No cloud dependencies. Runs offline on a laptop in under 30 seconds.
 
 ## Author
 
-**Shaylesh** — Data & AI Engineer
-Submitted as part of the Relatim technical interview process.
+**Shayshank Rathore** — Data & AI Engineer
 
 ---
 
