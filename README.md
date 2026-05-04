@@ -273,7 +273,7 @@ python solution_code/validate.py
 |---|---|
 | `README.md` | This file — project overview |
 | `BRD_and_TestCases.docx` | A3-landscape Business Requirements Doc (13 sections, 23 functional requirements, RACI matrix, risk register) + 70 test cases |
-| `Objective_problem.docx` | Original brief from examiner |
+| `Objective_problem.docx` | Original brief from company |
 | Inline code comments | Every helper function in `solution_code/` is documented |
 | `Task .xlsx → README` sheet | In-workbook quick reference |
 
