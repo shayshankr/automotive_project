@@ -85,8 +85,7 @@ A multi-brand automotive dealer is losing customers in the post-warranty / post-
 
 ```
 automotive_project/
-├── README.md                          ← you are here
-├── Objective_problem.docx             ← original brief from examiner
+├── README.md                          ← readme file 
 ├── Task .xlsx                         ← main deliverable (21 sheets)
 ├── Churn_Results_Published.xlsx       ← standalone visual output
 ├── BRD_and_TestCases.docx             ← Business Requirements Doc + 70 test cases
