@@ -84,7 +84,7 @@ A multi-brand automotive dealer is losing customers in the post-warranty / post-
 ## Repository Structure
 
 ```
-interview/
+automotive_project/
 ├── README.md                          ← you are here
 ├── Objective_problem.docx             ← original brief from examiner
 ├── Task .xlsx                         ← main deliverable (21 sheets)
