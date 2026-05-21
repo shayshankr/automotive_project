@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- X axis -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M20,80 L88,80" />
+    <!-- Y axis -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M20,80 L20,20" />
+    <!-- Saturation curve -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#64B5F6"
+        android:strokeWidth="5"
+        android:pathData="M20,80 Q40,76 55,60 Q70,44 80,20" />
+    <!-- Constant RH arc -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#A5D6A7"
+        android:strokeWidth="3"
+        android:strokeAlpha="0.7"
+        android:pathData="M30,80 Q50,74 65,55 Q75,42 82,28" />
+    <!-- State point dot (circle approximated with path) -->
+    <path
+        android:fillColor="#EF5350"
+        android:pathData="M55,53 a5,5 0 1,0 0.001,0 Z" />
+</vector>

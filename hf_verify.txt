@@ -1,0 +1,7 @@
+Line 6: st.set_page_config(
+Line 7:     page_title="Ireland Visa Decision Checker – New Delhi",
+Line 9:     page_icon="🇮🇪",
+Line 15: st.title("Visa Application Status Checker")
+Line 16: st.caption("New Delhi Embassy · Data sourced from ireland.ie")
+Line 52: st.caption("Valid formats: `63690452` · `IRL63690452` · `irl63690452` — exactly 8 digits, optional IRL prefix")
+Line 85: st.caption(f"Data refreshes every hour. [Source]({BASE_URL})")
