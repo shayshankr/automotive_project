@@ -39,12 +39,20 @@ st.success(f"**{meta}**" if meta else "Data loaded.")
 # ── Stats row ─────────────────────────────────────────────────────────────────
 total = len(df)
 decisions = df["Decision"].value_counts()
-col1, col2, col3 = st.columns(3)
-col1.metric("Total Decisions", total)
-col2.metric("Approved", int(decisions.get("Approved", decisions.get("Granted", 0))))
-col3.metric("Refused", int(decisions.get("Refused", decisions.get("Rejected", 0))))
+approved = int(decisions.get("Approved", decisions.get("Granted", 0)))
+refused = int(decisions.get("Refused", decisions.get("Rejected", 0)))
+approval_pct = round(approved / total * 100, 1) if total > 0 else 0
+refused_pct = round(refused / total * 100, 1) if total > 0 else 0
 
-st.divider()
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Decisions", f"{total:,}")
+col2.metric("Approved", f"{approved:,}")
+col2.markdown(f"<p style='color:#22a45d;font-size:0.85rem;margin-top:-12px;'>{approval_pct}% approval rate</p>", unsafe_allow_html=True)
+col3.metric("Refused", f"{refused:,}")
+col3.markdown(f"<p style='color:#d9534f;font-size:0.85rem;margin-top:-12px;'>{refused_pct}% refusal rate</p>", unsafe_allow_html=True)
+
+st.write("")
 
 # ── Search ────────────────────────────────────────────────────────────────────
 st.subheader("Check your application")
@@ -62,7 +70,7 @@ if st.button("Search"):
     else:
         st.warning("Please enter an Application Number to search.")
 
-st.divider()
+st.write("")
 
 # ── Download full dataset ─────────────────────────────────────────────────────
 csv = df.to_csv(index=False).encode("utf-8")
