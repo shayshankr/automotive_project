@@ -1,3 +1,20 @@
+---
+title: Irish Visa Decisions IRL
+emoji: ⚡
+colorFrom: yellow
+colorTo: green
+sdk: streamlit
+sdk_version: 1.57.0
+app_file: main.py
+pinned: true
+short_description: 'Ireland Visa Decision Tracker for students and travelers. '
+license: mit
+thumbnail: >-
+  https://cdn-uploads.huggingface.co/production/uploads/66d92a9c97cc9bc51e1bb687/RQO79zaP3icsXDFkg7qLZ.png
+---
+
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+
 # Visa Application Status Checker
 
 A Streamlit app that lets applicants instantly check the status of their Irish visa application processed by the **New Delhi Embassy**.
