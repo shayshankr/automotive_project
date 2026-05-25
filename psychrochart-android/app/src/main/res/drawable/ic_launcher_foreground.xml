@@ -4,33 +4,46 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- X axis -->
+
+    <!-- Chart background rect (safe zone 21..87) -->
     <path
-        android:fillColor="#00000000"
+        android:fillColor="#14FFFFFF"
+        android:pathData="M20,30 L88,30 L88,82 L20,82 Z"/>
+
+    <!-- Saturation curve (approximate arc) -->
+    <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="4"
-        android:pathData="M20,80 L88,80" />
-    <!-- Y axis -->
-    <path
-        android:fillColor="#00000000"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="4"
-        android:pathData="M20,80 L20,20" />
-    <!-- Saturation curve -->
-    <path
-        android:fillColor="#00000000"
-        android:strokeColor="#64B5F6"
-        android:strokeWidth="5"
-        android:pathData="M20,80 Q40,76 55,60 Q70,44 80,20" />
-    <!-- Constant RH arc -->
-    <path
-        android:fillColor="#00000000"
-        android:strokeColor="#A5D6A7"
         android:strokeWidth="3"
-        android:strokeAlpha="0.7"
-        android:pathData="M30,80 Q50,74 65,55 Q75,42 82,28" />
-    <!-- State point dot (circle approximated with path) -->
+        android:fillColor="#00000000"
+        android:pathData="M20,82 Q40,78 55,60 Q70,42 88,30"/>
+
+    <!-- 70% RH curve -->
     <path
-        android:fillColor="#EF5350"
-        android:pathData="M55,53 a5,5 0 1,0 0.001,0 Z" />
+        android:strokeColor="#1ABC9C"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M20,82 Q42,80 58,68 Q74,56 88,42"/>
+
+    <!-- 40% RH curve -->
+    <path
+        android:strokeColor="#1ABC9C"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M20,82 Q45,81 62,74 Q78,68 88,58"/>
+
+    <!-- Chart border -->
+    <path
+        android:strokeColor="#44FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M20,30 L88,30 L88,82 L20,82 Z"/>
+
+    <!-- State-point dot (orange) -->
+    <path
+        android:fillColor="#E67E22"
+        android:pathData="M65,52 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0"/>
+    <!-- White centre -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M65,52 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"/>
 </vector>

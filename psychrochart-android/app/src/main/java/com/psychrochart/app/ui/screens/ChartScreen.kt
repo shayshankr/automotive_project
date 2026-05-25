@@ -21,9 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.unit.dp
 import com.psychrochart.app.domain.PsychroCalc
-import com.psychrochart.app.domain.PsychroState
 import com.psychrochart.app.ui.theme.*
 import com.psychrochart.app.viewmodel.MainViewModel
+import kotlin.math.sqrt
 
 private const val DBT_MIN = -10.0
 private const val DBT_MAX = 50.0
@@ -33,9 +33,11 @@ private const val W_MAX   = 0.030
 @Composable
 fun ChartScreen(vm: MainViewModel) {
     val plottedStates by vm.plottedStates.collectAsState()
+    val processResult  by vm.processResult.collectAsState()
 
     var scale      by remember { mutableFloatStateOf(1f) }
     var offset     by remember { mutableStateOf(Offset.Zero) }
+    val textMeasurer = rememberTextMeasurer()
 
     val transformState = rememberTransformableState { zoomChange, panChange, _ ->
         scale  = (scale * zoomChange).coerceIn(0.8f, 8f)
@@ -61,7 +63,8 @@ fun ChartScreen(vm: MainViewModel) {
             fun toY(humidity: Double) = (pad.y + plotH - ((humidity - W_MIN) / (W_MAX - W_MIN)) * plotH).toFloat()
 
             // Background
-            drawRect(Color(0xFFF5F8FC), topLeft = Offset(pad.x, pad.y), size = androidx.compose.ui.geometry.Size(plotW, plotH))
+            drawRect(Color(0xFFF5F8FC), topLeft = Offset(pad.x, pad.y),
+                size = androidx.compose.ui.geometry.Size(plotW, plotH))
 
             // Grid lines
             for (t in -10..50 step 5) {
@@ -74,50 +77,123 @@ fun ChartScreen(vm: MainViewModel) {
                 drawLine(Color.Gray.copy(alpha = 0.2f), Offset(pad.x, y), Offset(pad.x + plotW, y), 1f)
             }
 
-            // Constant RH lines (10%–90%)
+            // Text styles for curve labels
+            val rhLabelStyle  = TextStyle(fontSize = 7.sp,   color = Color(0xFF1055A8))
+            val wbtLabelStyle = TextStyle(fontSize = 6.5.sp, color = Color(0xFF007A38))
+            val hLabelStyle   = TextStyle(fontSize = 6.sp,   color = Color(0xFFB50009))
+            val vLabelStyle   = TextStyle(fontSize = 6.sp,   color = Color(0xFF7A1DB8))
+
+            // Constant RH lines (10%–90%) with labels at the hot (right) end
             for (rhInt in 10..90 step 10) {
                 val rh = rhInt / 100.0
                 val pts = PsychroCalc.constantRhCurve(rh).points
                 drawChartPath(pts, ChartRH.copy(alpha = 0.5f), 2f, ::toX, ::toY)
+                if (pts.isNotEmpty()) {
+                    val last = pts.last()
+                    drawText(
+                        textMeasurer, "$rhInt%",
+                        topLeft = Offset(toX(last.first) + 3f, toY(last.second) - 16f),
+                        style = rhLabelStyle,
+                    )
+                }
             }
 
             // Saturation curve
             val satPts = PsychroCalc.saturationCurve().points
             drawChartPath(satPts, ChartSaturation, 4f, ::toX, ::toY)
 
-            // Constant WBT lines
+            // Constant WBT lines with labels at the cold (left) end
             for (wbt in -5..30 step 5) {
                 val pts = PsychroCalc.constantWbtCurve(wbt.toDouble()).points
                 drawChartPath(pts, ChartWBT.copy(alpha = 0.4f), 1.5f, ::toX, ::toY, dashInterval = 15f)
+                if (pts.isNotEmpty()) {
+                    val first = pts.first()
+                    drawText(
+                        textMeasurer, "${wbt}°C",
+                        topLeft = Offset(toX(first.first) - 2f, toY(first.second) - 28f),
+                        style = wbtLabelStyle,
+                    )
+                }
             }
 
-            // Constant enthalpy lines
+            // Constant enthalpy lines with labels at the left end
             for (hKj in -10..120 step 10) {
                 val pts = PsychroCalc.constantEnthalpyCurve(hKj.toDouble()).points
                 drawChartPath(pts, ChartEnthalpy.copy(alpha = 0.3f), 1f, ::toX, ::toY, dashInterval = 10f)
+                if (pts.isNotEmpty()) {
+                    val first = pts.first()
+                    drawText(
+                        textMeasurer, "h=$hKj",
+                        topLeft = Offset(toX(first.first) - 2f, toY(first.second) - 14f),
+                        style = hLabelStyle,
+                    )
+                }
             }
 
-            // Constant specific volume lines
+            // Constant specific volume lines with labels at the left end
             for (vVal in listOf(0.80, 0.84, 0.88, 0.92)) {
                 val pts = PsychroCalc.constantSpecVolCurve(vVal).points
                 drawChartPath(pts, ChartSpecVol.copy(alpha = 0.35f), 1f, ::toX, ::toY, dashInterval = 8f)
+                if (pts.isNotEmpty()) {
+                    val first = pts.first()
+                    drawText(
+                        textMeasurer, "v=$vVal",
+                        topLeft = Offset(toX(first.first) - 2f, toY(first.second) - 28f),
+                        style = vLabelStyle,
+                    )
+                }
             }
 
             // Axes border
             drawRect(Color(0xFF2C3E50), topLeft = Offset(pad.x, pad.y),
                 size = androidx.compose.ui.geometry.Size(plotW, plotH), style = Stroke(2f))
 
-            // State points
+            // Process arrow — drawn between state1 and state2 when a process result exists
+            processResult?.let { result ->
+                val x1 = toX(result.state1.dbt);  val y1 = toY(result.state1.w)
+                val x2 = toX(result.state2.dbt);  val y2 = toY(result.state2.w)
+                val arrowColor = Color(0xFF2C3E50)
+                val dx = x2 - x1;  val dy = y2 - y1
+                val len = sqrt(dx * dx + dy * dy)
+                if (len > 5f) {
+                    // Shaft
+                    drawLine(arrowColor, Offset(x1, y1), Offset(x2, y2), 3f)
+                    // Arrowhead
+                    val ux = dx / len;  val uy = dy / len
+                    val px = -uy;       val py = ux
+                    val headLen = 18f;  val headWidth = 8f
+                    val hx = x2 - ux * headLen;  val hy = y2 - uy * headLen
+                    drawPath(Path().apply {
+                        moveTo(x2, y2)
+                        lineTo(hx + px * headWidth, hy + py * headWidth)
+                        lineTo(hx - px * headWidth, hy - py * headWidth)
+                        close()
+                    }, arrowColor)
+                    // Process name at midpoint
+                    drawText(
+                        textMeasurer, result.processType.label,
+                        topLeft = Offset((x1 + x2) / 2f + 6f, (y1 + y2) / 2f - 18f),
+                        style = TextStyle(fontSize = 8.sp, color = arrowColor, fontWeight = FontWeight.Bold),
+                    )
+                }
+            }
+
+            // State point dots + on-chart text labels
             plottedStates.forEachIndexed { i, ps ->
                 val col = PointColors[i % PointColors.size]
                 val cx  = toX(ps.state.dbt)
                 val cy  = toY(ps.state.w)
                 drawCircle(col, 14f, Offset(cx, cy))
                 drawCircle(Color.White, 6f, Offset(cx, cy))
+                drawText(
+                    textMeasurer, ps.label,
+                    topLeft = Offset(cx + 16f, cy - 18f),
+                    style = TextStyle(fontSize = 9.sp, color = col, fontWeight = FontWeight.Bold),
+                )
             }
         }
 
-        // Overlay: legend + controls
+        // Overlay: legend
         Column(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -133,7 +209,7 @@ fun ChartScreen(vm: MainViewModel) {
             LegendRow(ChartSpecVol, "Const. Sp. Volume")
         }
 
-        // Plotted state labels
+        // Plotted state list at bottom-left
         if (plottedStates.isNotEmpty()) {
             Column(
                 modifier = Modifier
