@@ -229,3 +229,13 @@ __marimo__/
 
 # Per-customer 360 exports (regenerable via solution_code/customer_360.py)
 CUST*.xlsx
+
+# Embedded sub-projects (tracked in their own repos)
+ireland-visa-checker-abuja/
+ireland-visa-checker-ankara/
+ireland-visa-checker-delhi/
+psychrochart-android/
+
+# Node
+node_modules/
+solution_code/node_modules/
